@@ -3501,6 +3501,7 @@ importers:
     specifiers:
       '@mendix/eslint-config-web-widgets': workspace:*
       '@mendix/prettier-config-web-widgets': workspace:*
+      '@mendix/tsconfig-web-widgets': workspace:*
       '@mendix/widget-kit-web': workspace:*
       '@types/big.js': ^6.1.6
       '@types/node': ^18.8.3
@@ -3515,6 +3516,7 @@ importers:
     devDependencies:
       '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
       '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@mendix/tsconfig-web-widgets': link:../tsconfig-web-widgets
       '@types/big.js': 6.1.6
       '@types/node': 18.11.18
       '@types/react': 17.0.53
@@ -3528,6 +3530,7 @@ importers:
     specifiers:
       '@mendix/eslint-config-web-widgets': workspace:*
       '@mendix/prettier-config-web-widgets': workspace:*
+      '@mendix/tsconfig-web-widgets': workspace:*
       '@types/big.js': ^6.1.6
       '@types/node': ^18.8.3
       '@types/react': 17.0.53
@@ -3539,6 +3542,7 @@ importers:
     devDependencies:
       '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
       '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@mendix/tsconfig-web-widgets': link:../tsconfig-web-widgets
       '@types/big.js': 6.1.6
       '@types/node': 18.11.18
       '@types/react': 17.0.53
