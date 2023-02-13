@@ -3320,6 +3320,53 @@ importers:
       eslint: 7.32.0
       eslint-plugin-json: 3.1.0
 
+  packages/shared/pluggable-test-utils:
+    specifiers:
+      '@mendix/tsconfig-web-widgets': workspace:*
+      '@types/big.js': ^6.1.6
+      '@types/jest': ^26.0.24
+      '@types/node': ^18.8.3
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: ^9.22.62233
+      typescript: 4.5.4
+    devDependencies:
+      '@mendix/tsconfig-web-widgets': link:../tsconfig-web-widgets
+      '@types/big.js': 6.1.6
+      '@types/jest': 26.0.24
+      '@types/node': 18.11.18
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: 9.22.62233
+      typescript: 4.5.4
+
+  packages/shared/pluggable-utils:
+    specifiers:
+      '@mendix/eslint-config-web-widgets': workspace:*
+      '@mendix/prettier-config-web-widgets': workspace:*
+      '@mendix/tsconfig-web-widgets': workspace:*
+      '@types/big.js': ^6.1.6
+      '@types/jest': ^26.0.24
+      '@types/node': ^18.8.3
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      big.js: ^6.0.2
+      mendix: ^9.22.62233
+      typescript: 4.5.4
+    dependencies:
+      big.js: 6.2.1
+    devDependencies:
+      '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
+      '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@mendix/tsconfig-web-widgets': link:../tsconfig-web-widgets
+      '@types/big.js': 6.1.6
+      '@types/jest': 26.0.24
+      '@types/node': 18.11.18
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: 9.22.62233
+      typescript: 4.5.4
+
   packages/shared/pluggable-widgets-commons:
     specifiers:
       '@mendix/eslint-config-web-widgets': workspace:*
@@ -3395,6 +3442,79 @@ importers:
       '@prettier/plugin-xml': 2.2.0
     devDependencies:
       eslint: 7.32.0
+
+  packages/shared/tsconfig-web-widgets:
+    specifiers: {}
+
+  packages/shared/widget-kit-web:
+    specifiers:
+      '@mendix/eslint-config-web-widgets': workspace:*
+      '@mendix/prettier-config-web-widgets': workspace:*
+      '@mendix/tsconfig-web-widgets': workspace:*
+      '@types/big.js': ^6.1.6
+      '@types/node': ^18.8.3
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      big.js: ^6.0.2
+      classnames: ^2.3.2
+      mendix: ^9.22.62233
+      typescript: 4.5.4
+    dependencies:
+      big.js: 6.2.1
+      classnames: 2.3.2
+    devDependencies:
+      '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
+      '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@mendix/tsconfig-web-widgets': link:../tsconfig-web-widgets
+      '@types/big.js': 6.1.6
+      '@types/node': 18.11.18
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: 9.22.62233
+      typescript: 4.5.4
+
+  packages/shared/widget-plugin-filtering:
+    specifiers:
+      '@mendix/eslint-config-web-widgets': workspace:*
+      '@mendix/prettier-config-web-widgets': workspace:*
+      '@mendix/widget-kit-web': workspace:*
+      '@types/big.js': ^6.1.6
+      '@types/node': ^18.8.3
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: ^9.22.62233
+      typescript: 4.5.4
+    dependencies:
+      '@mendix/widget-kit-web': link:../widget-kit-web
+    devDependencies:
+      '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
+      '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@types/big.js': 6.1.6
+      '@types/node': 18.11.18
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: 9.22.62233
+      typescript: 4.5.4
+
+  packages/shared/widget-plugin-sorting:
+    specifiers:
+      '@mendix/eslint-config-web-widgets': workspace:*
+      '@mendix/prettier-config-web-widgets': workspace:*
+      '@types/big.js': ^6.1.6
+      '@types/node': ^18.8.3
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: ^9.22.62233
+      typescript: 4.5.4
+    devDependencies:
+      '@mendix/eslint-config-web-widgets': link:../eslint-config-web-widgets
+      '@mendix/prettier-config-web-widgets': link:../prettier-config-web-widgets
+      '@types/big.js': 6.1.6
+      '@types/node': 18.11.18
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
+      mendix: 9.22.62233
+      typescript: 4.5.4
 
 packages:
 
@@ -15749,6 +15869,7 @@ packages:
   /typescript/4.5.4:
     resolution: {integrity: sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==}
     engines: {node: '>=4.2.0'}
+    hasBin: true
 
   /uglify-js/3.17.4:
     resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
