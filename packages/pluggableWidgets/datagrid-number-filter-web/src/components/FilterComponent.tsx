@@ -1,10 +1,9 @@
-import { createElement, CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import { FilterSelector } from "@mendix/pluggable-widgets-commons/components/web";
-import { debounce } from "@mendix/pluggable-widgets-commons";
-
-import { DefaultFilterEnum } from "../../typings/DatagridNumberFilterProps";
+import { FilterSelector } from "@mendix/widget-kit-web/ui/FilterSelector";
+import { debounce } from "@mendix/widget-kit-web/util";
 import { Big } from "big.js";
 import classNames from "classnames";
+import { createElement, CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { DefaultFilterEnum } from "../../typings/DatagridNumberFilterProps";
 
 interface FilterComponentProps {
     adjustable: boolean;
@@ -24,7 +23,7 @@ interface FilterComponentProps {
 export function FilterComponent(props: FilterComponentProps): ReactElement {
     const [type, setType] = useState<DefaultFilterEnum>(props.defaultFilter);
     const [value, setValue] = useState<Big | undefined>(undefined);
-    const [valueInput, setValueInput] = useState<string | undefined>(undefined);
+    const [valueInput, setValueInput] = useState<string | undefined>("");
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
