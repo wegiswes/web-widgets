@@ -157,8 +157,8 @@
         <propertyGroup caption="Accessibility">
             <propertyGroup caption="Accessibility">
                 <property key="filterSectionTitle" type="textTemplate" required="false">
-                    <caption>Filter section title</caption>
-                    <description>Assistive technology will read this upon reaching a filtering or sorting section.</description>
+                    <caption>Header section title</caption>
+                    <description>Assistive technology will read this upon reaching the header section.</description>
                 </property>
                 <property key="emptyMessageTitle" type="textTemplate" required="false">
                     <caption>Empty message title</caption>

@@ -7,40 +7,33 @@ function Preview(props: GalleryPreviewProps): ReactElement {
     const items: ObjectItem[] = Array.from({ length: props.pageSize ?? 5 }).map((_, index) => ({
         id: String(index) as GUID
     }));
-    const caption =
-        props.filterList.length > 0
-            ? props.sortList.length > 0
-                ? "Place filter/sort widgets here"
-                : "Place filter widgets here"
-            : props.sortList.length > 0
-            ? "Place sort widgets here"
-            : "Place widgets here";
-    const isSortableFilterable = props.filterList.length > 0 || props.sortList.length > 0;
+
+    const showHeader = props.filterList.length > 0 || props.sortList.length > 0;
     return (
         <GalleryComponent
             className={props.className}
             desktopItems={props.desktopItems!}
             emptyPlaceholderRenderer={useCallback(
                 renderWrapper => (
-                    <props.emptyPlaceholder.renderer caption="Empty list message: Place widgets here">
+                    <props.emptyPlaceholder.renderer caption="Empty list message: place widgets here">
                         {renderWrapper(false, null)}
                     </props.emptyPlaceholder.renderer>
                 ),
                 [props]
             )}
-            filters={
-                isSortableFilterable ? (
-                    <props.filtersPlaceholder.renderer caption={caption}>
+            headerContent={
+                showHeader ? (
+                    <props.filtersPlaceholder.renderer caption="Gallery header: place data control widgets here">
                         <div />
                     </props.filtersPlaceholder.renderer>
                 ) : null
             }
-            hasFilters={!!props.filterList.length}
+            showHeader={showHeader}
             hasMoreItems={false}
             items={items}
             itemRenderer={useCallback(
                 renderWrapper => (
-                    <props.content.renderer caption="Gallery item: Place widgets here">
+                    <props.content.renderer caption="Gallery item: place widgets here">
                         {renderWrapper(false, null, "")}
                     </props.content.renderer>
                 ),

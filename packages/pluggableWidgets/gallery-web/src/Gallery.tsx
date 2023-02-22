@@ -90,7 +90,7 @@ export function Gallery(props: GalleryContainerProps): ReactElement {
         props.datasource.setSortOrder(undefined);
     }
 
-    const isSortableFilterable = props.filterList.length > 0 || props.sortList.length > 0;
+    const showHeader = props.filterList.length > 0 || props.sortList.length > 0 || !!props.itemSelection;
 
     const setPage = useCallback(
         computePage => {
@@ -119,9 +119,9 @@ export function Gallery(props: GalleryContainerProps): ReactElement {
                     [props.emptyPlaceholder, props.showEmptyPlaceholder]
                 )}
                 emptyMessageTitle={props.emptyMessageTitle?.value}
-                filters={useMemo(
+                headerContent={useMemo(
                     () =>
-                        isSortableFilterable ? (
+                        showHeader ? (
                             <FilterContext.Provider
                                 value={{
                                     filterDispatcher: prev => {
@@ -157,13 +157,13 @@ export function Gallery(props: GalleryContainerProps): ReactElement {
                         customFiltersState,
                         filterList,
                         initialFilters,
-                        isSortableFilterable,
+                        showHeader,
                         props.filtersPlaceholder,
                         sortList
                     ]
                 )}
-                filtersTitle={props.filterSectionTitle?.value}
-                hasFilters={!!props.filterList.length}
+                ariaHeaderLabel={props.filterSectionTitle?.value}
+                showHeader={showHeader}
                 hasMoreItems={props.datasource.hasMoreItems ?? false}
                 items={props.datasource.items ?? []}
                 itemRenderer={useCallback(

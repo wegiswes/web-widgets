@@ -135,7 +135,7 @@ export function getPreview(values: GalleryPreviewProps, isDarkMode: boolean): St
         rowLayout({
             columnSize: "fixed",
             borders: true
-        })(dropzone(dropzone.placeholder("Empty gallery message: place widgets here"))(values.emptyPlaceholder));
+        })(dropzone(dropzone.placeholder("Empty list message: place widgets here"))(values.emptyPlaceholder));
 
     return container()(titleHeader, header, content, footer);
 }

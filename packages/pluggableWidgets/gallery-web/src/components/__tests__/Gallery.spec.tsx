@@ -12,7 +12,7 @@ const itemWrapperFunction =
         customClass?: string;
     }): GalleryProps<ObjectItem>["itemRenderer"] =>
     (wrapper, item) =>
-        wrapper(item.id, customClass, onClick);
+        wrapper(false, item.id, customClass, onClick);
 
 const defaultProps: GalleryProps<ObjectItem> = {
     hasMoreItems: false,
@@ -25,8 +25,8 @@ const defaultProps: GalleryProps<ObjectItem> = {
     className: "",
     items: [{ id: "11" as GUID }, { id: "22" as GUID }, { id: "33" as GUID }],
     itemRenderer: itemWrapperFunction({}),
-    hasFilters: true,
-    filters: <input />
+    showHeader: true,
+    headerContent: <input />
 };
 
 describe("Gallery", () => {
@@ -172,7 +172,7 @@ describe("Gallery", () => {
                 <Gallery
                     {...defaultProps}
                     items={[]}
-                    filtersTitle="filter title"
+                    ariaHeaderLabel="filter title"
                     emptyMessageTitle="empty message"
                     emptyPlaceholderRenderer={renderWrapper => renderWrapper(<span>No items found</span>)}
                 />
@@ -182,10 +182,9 @@ describe("Gallery", () => {
         });
     });
 
-    describe("without filters", () => {
-        it("renders structure without filters container", () => {
-            const filters = { ...defaultProps, hasFilters: false, filters: undefined };
-            const gallery = render(<Gallery {...filters} />);
+    describe("without header", () => {
+        it("renders structure without header container", () => {
+            const gallery = render(<Gallery {...{ ...defaultProps, showHeader: false, filterContent: undefined }} />);
 
             expect(gallery).toMatchSnapshot();
         });
