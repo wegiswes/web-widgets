@@ -12,7 +12,7 @@ import {
 import { FilterCondition } from "mendix/filters";
 import { extractFilters } from "./utils/filters";
 import { and } from "mendix/filters/builders";
-import { executeAction } from "@mendix/pluggable-widgets-commons";
+import { executeAction, getGlobalSelectionContext, useCreateSelectionAPI } from "@mendix/pluggable-widgets-commons";
 
 export function Gallery(props: GalleryContainerProps): ReactElement {
     const viewStateFilters = useRef<FilterCondition | undefined>(undefined);
@@ -58,16 +58,17 @@ export function Gallery(props: GalleryContainerProps): ReactElement {
         [props.sortList]
     );
 
+    const viewStateFiltersValue = viewStateFilters.current;
     const initialFilters = useMemo(
         () =>
             props.filterList.reduce(
                 (filters, { filter }) => ({
                     ...filters,
-                    [filter.id]: extractFilters(filter, viewStateFilters.current)
+                    [filter.id]: extractFilters(filter, viewStateFiltersValue)
                 }),
                 {}
             ),
-        [props.filterList, viewStateFilters.current]
+        [props.filterList, viewStateFiltersValue]
     );
 
     const filters = Object.keys(customFiltersState)
@@ -103,81 +104,105 @@ export function Gallery(props: GalleryContainerProps): ReactElement {
         [props.datasource, props.pageSize, isInfiniteLoad, currentPage]
     );
 
+    const { Provider: SelectionAPIProvider } = getGlobalSelectionContext();
+    const api = useCreateSelectionAPI(props.itemSelection, props.datasource, props.onSelectionChange);
+    const selection = api.selection;
+
     return (
-        <GalleryComponent
-            className={props.class}
-            desktopItems={props.desktopItems}
-            emptyPlaceholderRenderer={useCallback(
-                renderWrapper =>
-                    props.showEmptyPlaceholder === "custom" ? renderWrapper(props.emptyPlaceholder) : <div />,
-                [props.emptyPlaceholder, props.showEmptyPlaceholder]
-            )}
-            emptyMessageTitle={props.emptyMessageTitle?.value}
-            filters={useMemo(
-                () =>
-                    isSortableFilterable ? (
-                        <FilterContext.Provider
-                            value={{
-                                filterDispatcher: prev => {
-                                    if (prev.filterType) {
-                                        const [, filterDispatcher] = customFiltersState[prev.filterType];
-                                        filterDispatcher(prev);
-                                        setFiltered(true);
-                                    }
-                                    return prev;
-                                },
-                                multipleAttributes: filterList,
-                                multipleInitialFilters: initialFilters
-                            }}
-                        >
-                            <SortContext.Provider
+        <SelectionAPIProvider value={api}>
+            <GalleryComponent
+                className={props.class}
+                desktopItems={props.desktopItems}
+                emptyPlaceholderRenderer={useCallback(
+                    renderWrapper =>
+                        props.showEmptyPlaceholder === "custom" ? renderWrapper(props.emptyPlaceholder) : <div />,
+                    [props.emptyPlaceholder, props.showEmptyPlaceholder]
+                )}
+                emptyMessageTitle={props.emptyMessageTitle?.value}
+                filters={useMemo(
+                    () =>
+                        isSortableFilterable ? (
+                            <FilterContext.Provider
                                 value={{
-                                    sortDispatcher: prev => {
-                                        setSorted(true);
-                                        setSortState(prev);
+                                    filterDispatcher: prev => {
+                                        if (prev.filterType) {
+                                            const [, filterDispatcher] = customFiltersState[prev.filterType];
+                                            filterDispatcher(prev);
+                                            setFiltered(true);
+                                        }
                                         return prev;
                                     },
-                                    attributes: sortList,
-                                    initialSort: viewStateSort.current
+                                    multipleAttributes: filterList,
+                                    multipleInitialFilters: initialFilters
                                 }}
                             >
-                                {props.filtersPlaceholder}
-                            </SortContext.Provider>
-                        </FilterContext.Provider>
-                    ) : null,
-                [
-                    FilterContext,
-                    SortContext,
-                    customFiltersState,
-                    filterList,
-                    initialFilters,
-                    isSortableFilterable,
-                    props.filtersPlaceholder,
-                    sortList
-                ]
-            )}
-            filtersTitle={props.filterSectionTitle?.value}
-            hasFilters={!!props.filterList.length}
-            hasMoreItems={props.datasource.hasMoreItems ?? false}
-            items={props.datasource.items ?? []}
-            itemRenderer={useCallback(
-                (renderWrapper, item) =>
-                    renderWrapper(
-                        props.content?.get(item),
-                        props.itemClass?.get(item)?.value,
-                        props.onClick ? () => executeAction(props.onClick?.get(item)) : undefined
-                    ),
-                [props.content, props.itemClass, props.onClick]
-            )}
-            numberOfItems={props.datasource.totalCount}
-            page={currentPage}
-            pageSize={props.pageSize}
-            paging={props.pagination === "buttons"}
-            paginationPosition={props.pagingPosition}
-            phoneItems={props.phoneItems}
-            setPage={setPage}
-            tabletItems={props.tabletItems}
-            tabIndex={props.tabIndex}
-        />
+                                <SortContext.Provider
+                                    value={{
+                                        sortDispatcher: prev => {
+                                            setSorted(true);
+                                            setSortState(prev);
+                                            return prev;
+                                        },
+                                        attributes: sortList,
+                                        initialSort: viewStateSort.current
+                                    }}
+                                >
+                                    {props.filtersPlaceholder}
+                                </SortContext.Provider>
+                            </FilterContext.Provider>
+                        ) : null,
+                    [
+                        FilterContext,
+                        SortContext,
+                        customFiltersState,
+                        filterList,
+                        initialFilters,
+                        isSortableFilterable,
+                        props.filtersPlaceholder,
+                        sortList
+                    ]
+                )}
+                filtersTitle={props.filterSectionTitle?.value}
+                hasFilters={!!props.filterList.length}
+                hasMoreItems={props.datasource.hasMoreItems ?? false}
+                items={props.datasource.items ?? []}
+                itemRenderer={useCallback(
+                    (renderWrapper, item) => {
+                        let onClick: undefined | (() => void);
+
+                        if (selection) {
+                            onClick = () => {
+                                if (selection.isSelected(item)) {
+                                    selection.remove(item);
+                                } else {
+                                    selection.add(item);
+                                }
+                            };
+                        } else if (props.onClick) {
+                            onClick = () => {
+                                executeAction(props.onClick?.get(item));
+                            };
+                        }
+
+                        return renderWrapper(
+                            !!selection?.isSelected(item),
+                            props.content?.get(item),
+                            props.itemClass?.get(item)?.value,
+                            onClick
+                        );
+                    },
+                    [props.content, props.itemClass, props.onClick, selection]
+                )}
+                numberOfItems={props.datasource.totalCount}
+                page={currentPage}
+                pageSize={props.pageSize}
+                paging={props.pagination === "buttons"}
+                paginationPosition={props.pagingPosition}
+                phoneItems={props.phoneItems}
+                setPage={setPage}
+                tabletItems={props.tabletItems}
+                tabIndex={props.tabIndex}
+            />
+        </SelectionAPIProvider>
     );
 }

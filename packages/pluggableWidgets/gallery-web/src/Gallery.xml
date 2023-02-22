@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.web.gallery.Gallery" pluginWidget="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../node_modules/mendix/custom_widget.xsd">
+<widget id="com.mendix.widget.web.gallery.Gallery" pluginWidget="true" offlineCapable="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
     <name>Gallery</name>
     <description />
     <studioProCategory>Data containers</studioProCategory>
@@ -16,8 +16,17 @@
                     <caption>Data source</caption>
                     <description />
                 </property>
+                <property key="itemSelection" type="selection" dataSource="datasource">
+                    <caption>Selection</caption>
+                    <description />
+                    <selectionTypes>
+                        <selectionType name="None" />
+                        <selectionType name="Single" />
+                        <selectionType name="Multi" />
+                    </selectionTypes>
+                </property>
                 <property key="content" type="widgets" dataSource="datasource" required="false">
-                    <caption>Content placeholder</caption>
+                    <caption>Item content</caption>
                     <description />
                 </property>
             </propertyGroup>
@@ -65,7 +74,7 @@
                     </enumerationValues>
                 </property>
                 <property key="emptyPlaceholder" type="widgets" required="false">
-                    <caption>Empty placeholder</caption>
+                    <caption>Empty message content</caption>
                     <description />
                 </property>
                 <property key="itemClass" type="expression" required="false" dataSource="datasource">
@@ -77,6 +86,10 @@
             <propertyGroup caption="Events">
                 <property key="onClick" type="action" required="false" dataSource="datasource">
                     <caption>On click action</caption>
+                    <description />
+                </property>
+                <property key="onSelectionChange" type="action" required="false">
+                    <caption>On selection change</caption>
                     <description />
                 </property>
             </propertyGroup>
@@ -106,7 +119,7 @@
                     </properties>
                 </property>
                 <property key="filtersPlaceholder" type="widgets" required="false">
-                    <caption>Filters placeholder</caption>
+                    <caption>Header content</caption>
                     <description />
                 </property>
             </propertyGroup>

@@ -1,9 +1,4 @@
-import {
-    ContainerProps,
-    DropZoneProps,
-    RowLayoutProps,
-    StructurePreviewProps
-} from "@mendix/pluggable-widgets-commons";
+import { StructurePreviewProps } from "@mendix/pluggable-widgets-commons";
 import {
     hidePropertiesIn,
     hidePropertyIn,
@@ -11,6 +6,7 @@ import {
     Properties,
     transformGroupsIntoTabs
 } from "@mendix/pluggable-widgets-tools";
+import { container, dropzone, rowLayout, text } from "@mendix/pluggable-widgets-commons/dist/structure-preview-api";
 import { GalleryPreviewProps } from "../typings/GalleryProps";
 
 export function getProperties(
@@ -26,8 +22,12 @@ export function getProperties(
         hidePropertyIn(defaultProperties, values, "emptyPlaceholder");
     }
 
-    if (values.filterList?.length === 0 && values.sortList?.length === 0) {
+    if (values.filterList?.length === 0 && values.sortList?.length === 0 && values.itemSelection === "None") {
         hidePropertyIn(defaultProperties, values, "filtersPlaceholder");
+    }
+
+    if (values.itemSelection === "None") {
+        hidePropertyIn(defaultProperties, values, "onSelectionChange");
     }
 
     if (platform === "web") {
@@ -74,124 +74,70 @@ export function check(values: GalleryPreviewProps): Problem[] {
             message: "Tablet items must be a number between 1 and 12"
         });
     }
+    if (values.itemSelection !== "None" && values.onClick !== null) {
+        errors.push({
+            property: "onClick",
+            message: '"On click action" must be set to "Do nothing" when "Selection" is enabled'
+        });
+    }
     return errors;
 }
 
 export function getPreview(values: GalleryPreviewProps, isDarkMode: boolean): StructurePreviewProps {
-    const filterCaption =
-        values.filterList.length > 0
-            ? values.sortList.length > 0
-                ? "Place filter/sort widgets here"
-                : "Place filter widgets here"
-            : values.sortList.length > 0
-            ? "Place sort widgets here"
-            : "Place widgets here";
-    const titleHeader: RowLayoutProps = {
-        type: "RowLayout",
+    const titleHeader = rowLayout({
         columnSize: "fixed",
         backgroundColor: isDarkMode ? "#3B5C8F" : "#DAEFFB",
         borders: true,
-        borderWidth: 1,
-        children: [
-            {
-                type: "Container",
-                padding: 4,
-                children: [
-                    {
-                        type: "Text",
-                        content: "Gallery",
-                        fontColor: isDarkMode ? "#6DB1FE" : "#2074C8"
-                    }
-                ]
-            }
-        ]
-    };
-    const filters = {
-        type: "RowLayout",
-        columnSize: "fixed",
-        borders: true,
-        children: [
-            {
-                type: "DropZone",
-                property: values.filtersPlaceholder,
-                placeholder: filterCaption
-            } as DropZoneProps
-        ]
-    } as RowLayoutProps;
+        borderWidth: 1
+    })(
+        container({
+            padding: 4
+        })(text({ fontColor: isDarkMode ? "#6DB1FE" : "#2074C8" })("Gallery"))
+    );
 
-    const content = {
-        type: "Container",
-        borders: true,
-        children: [
-            {
-                type: "RowLayout",
-                columnSize: "fixed",
-                children: [
-                    {
-                        type: "DropZone",
-                        property: values.content,
-                        placeholder: "Gallery item: Place widgets here"
-                    } as DropZoneProps
-                ]
-            } as RowLayoutProps,
-            {
-                type: "RowLayout",
-                columnSize: "grow",
-                children: [
-                    {
-                        type: "Container",
-                        grow: 1,
-                        children: []
-                    },
-                    {
-                        type: "Container",
-                        grow: 0,
-                        children: [
-                            {
-                                type: "Text",
-                                content: `Desktop ${values.desktopItems} ${getSingularPlural(
-                                    "Column",
-                                    values.desktopItems!
-                                )}, Tablet ${values.tabletItems} ${getSingularPlural(
-                                    "Column",
-                                    values.tabletItems!
-                                )}, Phone ${values.phoneItems} ${getSingularPlural("Column", values.phoneItems!)}`,
-                                fontColor: isDarkMode ? "#DEDEDE" : "#899499"
-                            }
-                        ]
-                    }
-                ]
-            } as RowLayoutProps
-        ]
-    } as ContainerProps;
+    const headerEnabled = values.filterList.length > 0 || values.sortList.length > 0 || values.itemSelection !== "None";
+    const header =
+        headerEnabled &&
+        rowLayout({
+            columnSize: "fixed",
+            borders: true
+        })(
+            dropzone(dropzone.placeholder("Gallery header: place data control widgets here"))(values.filtersPlaceholder)
+        );
 
+    const content = container({
+        borders: true
+    })(
+        rowLayout({
+            columnSize: "fixed"
+        })(dropzone(dropzone.placeholder("Gallery item: place widgets here"))(values.content)),
+        rowLayout({
+            columnSize: "grow"
+        })(
+            container({ grow: 1 })(),
+            container({ grow: 0 })(
+                text({
+                    fontColor: isDarkMode ? "#DEDEDE" : "#899499"
+                })(
+                    `Desktop ${values.desktopItems} ${getSingularPlural("Column", values.desktopItems!)}, Tablet ${
+                        values.tabletItems
+                    } ${getSingularPlural("Column", values.tabletItems!)}, Phone ${
+                        values.phoneItems
+                    } ${getSingularPlural("Column", values.phoneItems!)}`
+                )
+            )
+        )
+    );
+
+    const footerEnabled = values.showEmptyPlaceholder === "custom";
     const footer =
-        values.showEmptyPlaceholder === "custom"
-            ? [
-                  {
-                      type: "RowLayout",
-                      columnSize: "fixed",
-                      borders: true,
-                      children: [
-                          {
-                              type: "DropZone",
-                              property: values.emptyPlaceholder,
-                              placeholder: "Empty gallery message: Place widgets here"
-                          } as DropZoneProps
-                      ]
-                  } as RowLayoutProps
-              ]
-            : [];
+        footerEnabled &&
+        rowLayout({
+            columnSize: "fixed",
+            borders: true
+        })(dropzone(dropzone.placeholder("Empty gallery message: place widgets here"))(values.emptyPlaceholder));
 
-    return {
-        type: "Container",
-        children: [
-            titleHeader,
-            ...(values.filterList.length > 0 || values.sortList.length > 0 ? [filters] : []),
-            content,
-            ...footer
-        ]
-    };
+    return container()(titleHeader, header, content, footer);
 }
 
 function getSingularPlural(word: string, elements: number): string {
