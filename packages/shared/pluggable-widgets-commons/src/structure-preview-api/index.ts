@@ -48,12 +48,14 @@ export interface ContainerProps extends BlockStylingProps {
     children?: StructurePreviewProps[];
 }
 
-export function container(styleProps?: BlockStylingProps): (...children: StructurePreviewProps[]) => ContainerProps {
-    return (...children: StructurePreviewProps[]) => {
+export function container(
+    styleProps?: BlockStylingProps
+): (...children: Array<StructurePreviewProps | false | undefined>) => ContainerProps {
+    return (...children) => {
         return {
             type: "Container",
             ...styleProps,
-            children
+            children: children.filter((ch): ch is StructurePreviewProps => !!ch)
         };
     };
 }
@@ -67,12 +69,14 @@ export interface RowLayoutProps extends RowLayoutStyling {
     children: StructurePreviewProps[];
 }
 
-export function rowLayout(styleProps?: RowLayoutStyling): (...children: StructurePreviewProps[]) => RowLayoutProps {
-    return (...children: StructurePreviewProps[]) => {
+export function rowLayout(
+    styleProps?: RowLayoutStyling
+): (...children: Array<StructurePreviewProps | false | undefined>) => RowLayoutProps {
+    return (...children) => {
         return {
             type: "RowLayout",
             ...styleProps,
-            children
+            children: children.filter((ch): ch is StructurePreviewProps => !!ch)
         };
     };
 }
