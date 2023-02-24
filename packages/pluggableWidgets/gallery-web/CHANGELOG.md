@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   A new property - "On selection change". When selection enabled, this property allow you to specify a microflow or a nanoflow that will be called with selected item(s) as a parameter.
 
+### Changed
+
+-   We renamed some properties to improve Page Explorere view for gallery.
+
+-   We changed condition for gallery header. Now header dropzone visible when you enabled selection.
+
 ## [1.2.0] - 2022-06-13
 
 ### Fixed
