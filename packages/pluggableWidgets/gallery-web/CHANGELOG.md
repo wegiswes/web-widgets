@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+-   A new property - "Selection". This property controls item selection.
+
+-   A new property - "On selection change". When selection enabled, this property allow you to specify a microflow or a nanoflow that will be called with selected item(s) as a parameter.
+
 ## [1.2.0] - 2022-06-13
 
 ### Fixed
